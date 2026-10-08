@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VerdeCampus — The Living Net-Zero University Laboratory</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet"/>
+  
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Chart.js CDN for Dynamic Telemetry Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container": "#eaedff",
+            "on-surface-variant": "#424844",
+            "on-secondary-container": "#00714d",
+            "surface-container-low": "#f2f3ff",
+            "surface-tint": "#466557",
+            "on-tertiary-fixed-variant": "#00513a",
+            "on-primary-fixed": "#022016",
+            "surface-container-highest": "#dae2fd",
+            "inverse-surface": "#283044",
+            "outline": "#727974",
+            "primary-fixed-dim": "#adcebd",
+            "primary-fixed": "#c8ead9",
+            "primary": "#00120a",
+            "on-error": "#ffffff",
+            "on-secondary-fixed": "#002113",
+            "outline-variant": "#c1c8c3",
+            "inverse-primary": "#adcebd",
+            "background": "#faf8ff",
+            "secondary-fixed-dim": "#4edea3",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#002115",
+            "on-primary": "#ffffff",
+            "on-primary-fixed-variant": "#2f4d40",
+            "on-primary-container": "#729283",
+            "secondary-container": "#6cf8bb",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#80f9c8",
+            "on-secondary-fixed-variant": "#005236",
+            "on-background": "#131b2e",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#faf8ff",
+            "surface-container-high": "#e2e7ff",
+            "surface-dim": "#d2d9f4",
+            "inverse-on-surface": "#eef0ff",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "secondary": "#006c49",
+            "on-surface": "#131b2e",
+            "primary-container": "#0a291e",
+            "surface-variant": "#dae2fd",
+            "tertiary-fixed-dim": "#62dcad",
+            "on-tertiary-container": "#069e73",
+            "secondary-fixed": "#6ffbbe",
+            "surface": "#faf8ff",
+            "tertiary": "#00120a",
+            "on-error-container": "#93000a",
+            "tertiary-container": "#002a1c"
+          },
+          fontFamily: {
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "display-hero": ["Space Grotesk", "sans-serif"],
+            "body-sm": ["Hanken Grotesk", "sans-serif"],
+            "body-md": ["Hanken Grotesk", "sans-serif"],
+            "body-lg": ["Hanken Grotesk", "sans-serif"],
+            "label-telemetry": ["JetBrains Mono", "monospace"],
+            "label-data-sm": ["JetBrains Mono", "monospace"],
+            "label-data-lg": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(110, 231, 183, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(110, 231, 183, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(110, 231, 183, 0); }
+    }
+    /* Flowing vector animation */
+    @keyframes flow {
+      from { stroke-dashoffset: 24; }
+      to { stroke-dashoffset: 0; }
+    }
+    .flow-line {
+      stroke-dasharray: 6 6;
+      animation: flow 1.2s linear infinite;
+    }
+    /* Print Optimization for Superior PDF Export */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #executive-modal-content, #executive-modal-content * {
+        visibility: visible;
+      }
+      #executive-modal-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAF9] text-on-surface antialiased selection:bg-secondary-container selection:text-primary">
+
+<!-- ========================================================================= -->
+<!-- 1. TOP NAVBAR (Docked, Sticky, Glassmorphic)                              -->
+<!-- ========================================================================= -->
+<header class="bg-surface-container-lowest/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30">
+  <div class="flex justify-between items-center w-full px-6 md:px-12 max-w-[1440px] mx-auto h-16">
+    <!-- Brand & Entity Seal -->
+    <a href="#" class="flex items-center gap-3 group">
+      <img alt="VerdeCampus Institute Seal" class="h-9 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1Xzm0_1UE7EbMQzJiAgUqxyNF8_Hh0Z1sxT8X7UMr9LUv7qsRQveoY6u4MsDtkA8m6lyCHVmWt717AiltQhe4oJOnRm7U2hsgrbGYHKUdZx3mTer_2umF6NEGBjp2mcj8G41eJwMkvNh-u2ZYDoCRLsVfhncabY0LegNoKiLB8MEeXKQG3ZeUzp6_dqliT5JPQoC5WuTv1_2nt4ocyNi01i9S1h8p4FaT-IjkJEJ9PzPQXvAE8JWBAlQ-0"/>
+      <div class="hidden sm:flex flex-col">
+        <span class="text-headline-sm font-headline-sm font-semibold tracking-tight text-primary">VerdeCampus</span>
+        <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase tracking-widest text-[9px] -mt-1">Living Lab Inst.</span>
+      </div>
+    </a>
+
+    <!-- Navigation Cluster -->
+    <nav class="hidden lg:flex items-center space-x-6">
+      <a class="text-secondary border-b-2 border-secondary font-medium pb-1 font-body-md text-body-md transition-colors" href="#telemetry">Telemetry</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#campus-map">Campus Map</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#innovations">Innovations</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#simulator">What-If Simulator</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#research">Research</a>
+      <a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#roadmap">Roadmap</a>
+    </nav>
+
+    <!-- Right Controls & Actions -->
+    <div class="flex items-center gap-3">
+      <!-- Live Status Pill -->
+      <div class="hidden md:flex items-center gap-2 bg-[#FFFFFF] border border-[#E2E8F0] px-3 py-1.5 rounded-sm shadow-xs">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+        </span>
+        <span class="text-label-telemetry font-label-telemetry text-primary font-semibold" id="nav-net-clean-status">94.2% Net Clean</span>
+      </div>
+
+      <!-- Superior Showcase CTA: Executive ESG Brief -->
+      <button onclick="openExecutiveModal()" class="flex items-center gap-2 bg-primary-container text-[#FFFFFF] px-4 py-2 rounded-sm border border-primary-container hover:border-secondary transition-all duration-150 shadow-sm active:scale-95 group">
+        <span class="material-symbols-outlined text-[18px] text-secondary-fixed group-hover:rotate-12 transition-transform" data-icon="summarize">summarize</span>
+        <span class="text-label-data-sm font-label-data-sm tracking-wide font-medium">Executive ESG Brief</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ========================================================================= -->
+<!-- 2. HERO SECTION & TELEMETRY STREAM OVERVIEW                               -->
+<!-- ========================================================================= -->
+<section class="relative pt-10 pb-16 px-6 md:px-12 max-w-[1440px] mx-auto border-b border-[#E2E8F0]">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
+    <!-- Headline & Editorial Statement -->
+    <div class="lg:col-span-8 space-y-6">
+      <!-- Telemetry Status Eyebrow -->
+      <div class="inline-flex items-center gap-2.5 px-3 py-1 bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#10B981] pulse-ring"></span>
+        <span class="text-label-telemetry font-label-telemetry text-primary tracking-widest uppercase">
+          Live Telemetry • Campus Operating at 94.2% Clean Power
+        </span>
+        <span class="h-3 w-px bg-[#E2E8F0]"></span>
+        <span class="text-label-telemetry font-label-telemetry text-secondary font-semibold">ISO 14064 Verified</span>
+      </div>
+
+      <!-- Main Display Headline -->
+      <h1 class="text-headline-lg-mobile md:text-display-hero font-display-hero text-primary tracking-tight leading-[1.1] font-bold">
+        The Living Laboratory Powering Tomorrow’s University Today
+      </h1>
+
+      <!-- High-density Editorial Body -->
+      <p class="text-body-lg font-body-lg text-on-surface-variant max-w-3xl leading-relaxed">
+        A fully decentralized, sensor-driven academic ecosystem powered by smart microgrids, geothermal district heating, bifacial solar canopies, and student-engineered clean tech.
+      </p>
+
+      <!-- Action Cluster -->
+      <div class="flex flex-wrap items-center gap-4 pt-2">
+        <a class="inline-flex items-center gap-2.5 bg-primary-container text-[#FFFFFF] px-6 py-3.5 rounded-sm border border-primary-container hover:border-secondary transition-all group font-body-md text-body-md font-medium shadow-sm" href="#simulator">
+          <span class="material-symbols-outlined text-[18px] text-secondary-fixed" data-icon="tune">tune</span>
+          <span>Open What-If Simulator</span>
+          <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+        </a>
+        <a class="inline-flex items-center gap-2.5 bg-[#FFFFFF] text-primary px-5 py-3.5 rounded-sm border border-[#E2E8F0] hover:border-secondary transition-all font-body-md text-body-md font-medium shadow-xs" href="#campus-map">
+          <span class="material-symbols-outlined text-[18px] text-secondary" data-icon="explore">explore</span>
+          <span>Explore Campus GIS Map</span>
+        </a>
+        <button onclick="openExecutiveModal()" class="inline-flex items-center gap-2.5 bg-[#FFFFFF] text-on-surface-variant hover:text-primary px-4 py-3.5 rounded-sm border border-[#E2E8F0] hover:border-secondary transition-all font-body-md text-body-md">
+          <span class="material-symbols-outlined text-[18px] text-on-surface-variant" data-icon="picture_as_pdf">picture_as_pdf</span>
+          <span>Export ESG Brief</span>
+          <span class="text-label-telemetry font-label-telemetry bg-secondary/10 text-secondary px-1.5 py-0.5 rounded text-[10px]">PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Infrastructure Pulse Panel (Side-Widget) -->
+    <div class="lg:col-span-4 bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 space-y-5 shadow-xs">
+      <div class="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="hub">hub</span>
+          <span class="text-label-telemetry font-label-telemetry text-primary uppercase font-semibold">Substation Alpha</span>
+        </div>
+        <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">ISLAND READY</span>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+            <span>Dynamic Clean Load Coverage</span>
+            <span class="text-label-data-sm font-label-data-sm text-primary font-semibold" id="hero-coverage-val">108.4%</span>
+          </div>
+          <div class="w-full bg-[#F8FAF9] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
+            <div class="bg-secondary h-full rounded-full transition-all duration-700" id="hero-coverage-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+            <span>Thermal Loop Heat Sink</span>
+            <span class="text-label-data-sm font-label-data-sm text-primary font-semibold" id="hero-thermal-val">18.2°C Nom.</span>
+          </div>
+          <div class="w-full bg-[#F8FAF9] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
+            <div class="bg-secondary h-full rounded-full transition-all duration-700" style="width: 74%;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-1">
+            <span>Battery Energy Storage (BESS)</span>
+            <span class="text-label-data-sm font-label-data-sm text-secondary font-semibold" id="hero-bess-val">12.4 MWh / 89%</span>
+          </div>
+          <div class="w-full bg-[#F8FAF9] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
+            <div class="bg-[#10B981] h-full rounded-full transition-all duration-700" id="hero-bess-bar" style="width: 89%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-body-sm font-body-sm">
+        <span class="text-on-surface-variant">Real-Time Grid Balance</span>
+        <span class="text-label-data-sm font-label-data-sm text-secondary font-semibold" id="hero-export-delta">+720 kW Exporting</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architectural Imagery Canvas with Sensor Overlays -->
+  <div class="relative w-full rounded-sm overflow-hidden border border-[#E2E8F0] bg-primary group">
+    <img alt="VerdeCampus Net-Zero Biophilic Academic Complex" class="w-full h-[480px] object-cover object-center opacity-95 transition-transform duration-700 group-hover:scale-[1.01]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlaEif7RtqYBv6Llm65yVlg5nUbzeUEC1gApZUbo1FNZpzQKcbPNVUlPER7lBhHDcPzemgeygViHoxVXnmC8KV2iRMZfGTFlS6SzZYRhjtwWnwuopPbEM0AcHkltg6u0EyrcZSOifc6jzFqqLNVtaiP-9JNq2ugADhsu5o4cZWEYgdEE3Kir9sMYuiGVHL9H0qJkgFCTLlbaafoDjKjz020SuLRGO1cIMXCEgpy1Ni-DccoUofzXzgdZCzwrkG8a75nkSmSZxLSjw"/>
+    
+    <!-- Telemetric Spatial Interactive Markers on Campus Canvas -->
+    <a href="#innovations" class="absolute top-10 left-12 hidden md:flex items-center gap-2.5 bg-primary-container/90 backdrop-blur-md px-3.5 py-2 border border-[#6EE7B7]/30 rounded-sm text-[#FFFFFF] hover:border-secondary transition-all hover:scale-105">
+      <span class="w-2 h-2 rounded-full bg-[#10B981] pulse-ring"></span>
+      <div>
+        <p class="text-label-telemetry font-label-telemetry text-secondary-fixed">ARRAY_BIFACIAL_A4</p>
+        <p class="text-label-data-sm font-label-data-sm font-medium">Bifacial Photovoltaic Canopy • 2.4 MW Active</p>
+      </div>
+    </a>
+
+    <a href="#innovations" class="absolute bottom-28 right-12 hidden md:flex items-center gap-2.5 bg-primary-container/90 backdrop-blur-md px-3.5 py-2 border border-[#6EE7B7]/30 rounded-sm text-[#FFFFFF] hover:border-secondary transition-all hover:scale-105">
+      <span class="w-2 h-2 rounded-full bg-secondary-fixed"></span>
+      <div>
+        <p class="text-label-telemetry font-label-telemetry text-secondary-fixed">GEO_WELLFIELD_SOUTH</p>
+        <p class="text-label-data-sm font-label-data-sm font-medium">Subterranean Loop • ΔT 6.4°C Regulation</p>
+      </div>
+    </a>
+
+    <a href="#innovations" class="absolute top-1/3 right-1/4 hidden lg:flex items-center gap-2.5 bg-primary-container/90 backdrop-blur-md px-3.5 py-2 border border-[#6EE7B7]/30 rounded-sm text-[#FFFFFF] hover:border-secondary transition-all hover:scale-105">
+      <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+      <div>
+        <p class="text-label-telemetry font-label-telemetry text-secondary-fixed">QUAD_KINETIC_CONCOURSE</p>
+        <p class="text-label-data-sm font-label-data-sm font-medium">Piezoelectric Pavement • 42.1 kW Peak</p>
+      </div>
+    </a>
+
+    <!-- Bottom Floating Strip -->
+    <div class="w-full bg-[#FFFFFF]/95 backdrop-blur-md border-t border-[#E2E8F0] p-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase">Daily Clean Yield</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] font-semibold" id="hero-yield-trend">+12.4%</span>
+        </div>
+        <div class="text-headline-md font-headline-md font-semibold text-primary" id="hero-yield-num">14.8 MWh</div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Solar &amp; Wind Generation</p>
+      </div>
+      <div class="space-y-1 border-l border-[#E2E8F0] pl-6">
+        <div class="flex items-center justify-between">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase">Net Intensity</span>
+          <span class="text-label-telemetry font-label-telemetry text-secondary font-semibold">CERTIFIED</span>
+        </div>
+        <div class="text-headline-md font-headline-md font-semibold text-primary" id="hero-carbon-num">0.00 kg</div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Grid Carbon Per Hour</p>
+      </div>
+      <div class="space-y-1 border-l border-[#E2E8F0] pl-6">
+        <div class="flex items-center justify-between">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase">Hydrologic Loop</span>
+          <span class="text-label-telemetry font-label-telemetry text-secondary font-semibold">100% Non-Pot.</span>
+        </div>
+        <div class="text-headline-md font-headline-md font-semibold text-primary" id="hero-water-num">85,240 L</div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">Rainwater Recycled Today</p>
+      </div>
+      <div class="space-y-1 border-l border-[#E2E8F0] pl-6">
+        <div class="flex items-center justify-between">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase">Benchmark</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] font-semibold">Top 0.1%</span>
+        </div>
+        <div class="text-headline-md font-headline-md font-semibold text-primary">Platinum</div>
+        <p class="text-body-sm font-body-sm text-on-surface-variant">LEED Zero &amp; AASHE STARS</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 3. INTERACTIVE RENEWABLE INNOVATION GRID                                  -->
+<!-- ========================================================================= -->
+<section class="py-16 px-6 md:px-12 max-w-[1440px] mx-auto" id="innovations">
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="energy_program_saving">energy_program_saving</span>
+        <span class="text-label-telemetry font-label-telemetry text-secondary uppercase tracking-widest font-semibold">Campus Innovations in Motion</span>
+      </div>
+      <h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary tracking-tight font-bold">
+        Engineered for Closed-Loop Equilibrium
+      </h2>
+    </div>
+    <p class="text-body-md font-body-md text-on-surface-variant max-w-md">
+      Every square meter of our campus actively harvests, converts, and recycles energy through synchronized IoT telemetry.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Card 1 -->
+    <div class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 flex flex-col justify-between hover:border-secondary transition-all group shadow-xs">
+      <div>
+        <div class="flex justify-between items-center border-b border-[#E2E8F0] pb-3 mb-5">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">INNOVATION // 01</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">23.4% EFF.</span>
+        </div>
+        <div class="w-10 h-10 rounded-sm bg-[#F8FAF9] border border-[#E2E8F0] flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-[#FFFFFF] transition-colors mb-4">
+          <span class="material-symbols-outlined text-[22px]" data-icon="solar_power">solar_power</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary mb-2 font-semibold">Agrivoltaic &amp; Bifacial Canopies</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
+          Dynamic tilt arrays suspended above academic concourses and research greenhouses generating 6.2 MW with bifacial ground albedo reflection.
+        </p>
+      </div>
+      <div class="pt-4 border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">INSTALLED CAPACITY</span>
+        <span class="text-primary font-semibold">6.2 MW PEAK</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 flex flex-col justify-between hover:border-secondary transition-all group shadow-xs">
+      <div>
+        <div class="flex justify-between items-center border-b border-[#E2E8F0] pb-3 mb-5">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">INNOVATION // 02</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">180M DEPTH</span>
+        </div>
+        <div class="w-10 h-10 rounded-sm bg-[#F8FAF9] border border-[#E2E8F0] flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-[#FFFFFF] transition-colors mb-4">
+          <span class="material-symbols-outlined text-[22px]" data-icon="heat_pump">heat_pump</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary mb-2 font-semibold">Closed-Loop Geothermal District Grid</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
+          Subterranean geo-exchange wells regulating building core temperatures year-round, reducing mechanical HVAC demand by over 70%.
+        </p>
+      </div>
+      <div class="pt-4 border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">THERMAL EFFICIENCY</span>
+        <span class="text-primary font-semibold">COP 4.88 RATIO</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 flex flex-col justify-between hover:border-secondary transition-all group shadow-xs">
+      <div>
+        <div class="flex justify-between items-center border-b border-[#E2E8F0] pb-3 mb-5">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">INNOVATION // 03</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">340 kWh/D</span>
+        </div>
+        <div class="w-10 h-10 rounded-sm bg-[#F8FAF9] border border-[#E2E8F0] flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-[#FFFFFF] transition-colors mb-4">
+          <span class="material-symbols-outlined text-[22px]" data-icon="mode_fan">mode_fan</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary mb-2 font-semibold">Kinetic Concourse &amp; Micro-Wind</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
+          Piezoelectric high-traffic pedestrian flagstones paired with low-vibration helical rooftop turbines for continuous ambient power generation.
+        </p>
+      </div>
+      <div class="pt-4 border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">FOOTFALL ENERGY</span>
+        <span class="text-primary font-semibold">92,000 STEPS/HR</span>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 flex flex-col justify-between hover:border-secondary transition-all group shadow-xs">
+      <div>
+        <div class="flex justify-between items-center border-b border-[#E2E8F0] pb-3 mb-5">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">INNOVATION // 04</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">99.4% DIV.</span>
+        </div>
+        <div class="w-10 h-10 rounded-sm bg-[#F8FAF9] border border-[#E2E8F0] flex items-center justify-center text-primary group-hover:bg-primary-container group-hover:text-[#FFFFFF] transition-colors mb-4">
+          <span class="material-symbols-outlined text-[22px]" data-icon="recycling">recycling</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary mb-2 font-semibold">Anaerobic Biomass Digester</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
+          Campus dining hall organic residues converted into methane electricity and enriched bio-fertilizer for the university arboretum.
+        </p>
+      </div>
+      <div class="pt-4 border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">BIOGAS OUTPUT</span>
+        <span class="text-primary font-semibold">1,450 m³/MONTH</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 4. INTERACTIVE GIS CAMPUS MAP & ZONE EXPLORER (FEATURE 3)                 -->
+<!-- ========================================================================= -->
+<section class="py-16 px-6 md:px-12 bg-[#F2F5F3] border-y border-[#E2E8F0]" id="campus-map">
+  <div class="max-w-[1440px] mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="map">map</span>
+          <span class="text-label-telemetry font-label-telemetry text-secondary uppercase tracking-widest font-semibold">Interactive Spatial Telemetry</span>
+        </div>
+        <h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary tracking-tight font-bold">
+          Campus GIS Microgrid &amp; Infrastructure Map
+        </h2>
+      </div>
+      <p class="text-body-sm font-body-sm text-on-surface-variant max-w-md">
+        Click any sector below to inspect building-level Energy Use Intensity (EUI), solar canopies, and real-time sensor node feeds.
+      </p>
+    </div>
+
+    <!-- Map Stage Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Interactive SVG Campus Schematic Blueprint -->
+      <div class="lg:col-span-8 bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 shadow-sm relative overflow-hidden">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b border-[#E2E8F0]">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">CAMPUS SCHEMATIC // LIVE OVERLAY</span>
+          <div class="flex gap-2">
+            <button onclick="selectZone('zone1')" id="btn-zone1" class="zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-secondary bg-secondary text-[#FFFFFF] transition-all">Zone 1: Science Hub</button>
+            <button onclick="selectZone('zone2')" id="btn-zone2" class="zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-[#E2E8F0] bg-[#F8FAF9] text-primary hover:border-secondary transition-all">Zone 2: Athletics</button>
+            <button onclick="selectZone('zone3')" id="btn-zone3" class="zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-[#E2E8F0] bg-[#F8FAF9] text-primary hover:border-secondary transition-all">Zone 3: Eco-Dorms</button>
+            <button onclick="selectZone('zone4')" id="btn-zone4" class="zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-[#E2E8F0] bg-[#F8FAF9] text-primary hover:border-secondary transition-all">Zone 4: Substation</button>
+          </div>
+        </div>
+
+        <!-- Architectural SVG Map -->
+        <svg viewBox="0 0 800 460" class="w-full h-auto bg-[#F8FAF9] border border-[#E2E8F0] rounded-sm cursor-pointer select-none">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E2E8F0" stroke-width="0.8"/>
+            </pattern>
+          </defs>
+          <rect width="800" height="460" fill="url(#grid)" />
+
+          <!-- Concourse Paths & Kinetic Walkways -->
+          <path d="M 100 230 Q 380 230 700 230" stroke="#CBD5E1" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path d="M 400 60 L 400 400" stroke="#CBD5E1" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M 100 230 Q 380 230 700 230" stroke="#10B981" stroke-width="3" fill="none" class="flow-line" opacity="0.6"/>
+
+          <!-- Zone 1: North Quad Science & Engineering -->
+          <g id="map-zone1" onclick="selectZone('zone1')" class="transition-all hover:opacity-90">
+            <rect x="80" y="60" width="260" height="130" rx="4" fill="#0A291E" stroke="#10B981" stroke-width="2.5" class="shadow-md"/>
+            <!-- Solar Rooftop Representation -->
+            <rect x="95" y="75" width="105" height="45" fill="#10B981" opacity="0.4" stroke="#6EE7B7" stroke-width="1"/>
+            <rect x="210" y="75" width="115" height="45" fill="#10B981" opacity="0.4" stroke="#6EE7B7" stroke-width="1"/>
+            <text x="100" y="150" fill="#FFFFFF" font-family="Space Grotesk" font-weight="600" font-size="14">ZONE 01: SCIENCE &amp; ENG HUB</text>
+            <text x="100" y="170" fill="#6EE7B7" font-family="JetBrains Mono" font-size="11">LEED PLATINUM • 100% NET-POS</text>
+            <circle cx="310" cy="85" r="5" fill="#10B981" class="pulse-ring"/>
+          </g>
+
+          <!-- Zone 2: Athletic & Aquatic Complex -->
+          <g id="map-zone2" onclick="selectZone('zone2')" class="transition-all hover:opacity-90 opacity-80">
+            <rect x="460" y="60" width="260" height="130" rx="4" fill="#0F172A" stroke="#E2E8F0" stroke-width="2"/>
+            <rect x="480" y="80" width="120" height="45" fill="#38BDF8" opacity="0.3" stroke="#38BDF8" stroke-width="1"/>
+            <text x="480" y="150" fill="#FFFFFF" font-family="Space Grotesk" font-weight="600" font-size="14">ZONE 02: ATHLETICS &amp; POOL</text>
+            <text x="480" y="170" fill="#94A3B8" font-family="JetBrains Mono" font-size="11">GEO-EXCHANGE • 92% NET-CLEAN</text>
+            <circle cx="690" cy="85" r="4" fill="#38BDF8"/>
+          </g>
+
+          <!-- Zone 3: Residential Eco-Living Village -->
+          <g id="map-zone3" onclick="selectZone('zone3')" class="transition-all hover:opacity-90 opacity-80">
+            <rect x="80" y="270" width="260" height="130" rx="4" fill="#0F172A" stroke="#E2E8F0" stroke-width="2"/>
+            <rect x="100" y="290" width="70" height="50" fill="#10B981" opacity="0.25"/>
+            <rect x="180" y="290" width="70" height="50" fill="#10B981" opacity="0.25"/>
+            <rect x="260" y="290" width="60" height="50" fill="#10B981" opacity="0.25"/>
+            <text x="100" y="365" fill="#FFFFFF" font-family="Space Grotesk" font-weight="600" font-size="14">ZONE 03: RESIDENTIAL QUAD</text>
+            <text x="100" y="385" fill="#94A3B8" font-family="JetBrains Mono" font-size="11">GREYWATER CLOSED LOOP • 96%</text>
+            <circle cx="310" cy="295" r="4" fill="#10B981"/>
+          </g>
+
+          <!-- Zone 4: Central Microgrid Substation Alpha -->
+          <g id="map-zone4" onclick="selectZone('zone4')" class="transition-all hover:opacity-90 opacity-80">
+            <rect x="460" y="270" width="260" height="130" rx="4" fill="#0A291E" stroke="#E2E8F0" stroke-width="2"/>
+            <rect x="480" y="290" width="100" height="45" fill="#F59E0B" opacity="0.35" stroke="#F59E0B" stroke-width="1"/>
+            <rect x="600" y="290" width="100" height="45" fill="#10B981" opacity="0.35" stroke="#10B981" stroke-width="1"/>
+            <text x="480" y="365" fill="#FFFFFF" font-family="Space Grotesk" font-weight="600" font-size="14">ZONE 04: SUBSTATION &amp; BESS</text>
+            <text x="480" y="385" fill="#6EE7B7" font-family="JetBrains Mono" font-size="11">12.4 MWh BESS • ISLAND READY</text>
+            <circle cx="690" cy="295" r="5" fill="#F59E0B" class="pulse-ring"/>
+          </g>
+
+          <!-- Central Plaza Compass / Hub -->
+          <circle cx="400" cy="230" r="28" fill="#FFFFFF" stroke="#006C49" stroke-width="3"/>
+          <text x="400" y="235" text-anchor="middle" fill="#006C49" font-family="JetBrains Mono" font-size="11" font-weight="bold">MICROGRID</text>
+        </svg>
+
+        <div class="flex items-center justify-between pt-3 text-label-telemetry font-label-telemetry text-on-surface-variant">
+          <span>* Click any zone building on the map or pills above to stream real-time data</span>
+          <span class="text-secondary font-semibold">REFRESH RATE: 1000ms</span>
+        </div>
+      </div>
+
+      <!-- Zone Inspector Drawer (Dynamic Content) -->
+      <div class="lg:col-span-4 bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-6 shadow-sm space-y-5" id="zone-drawer">
+        <div class="border-b border-[#E2E8F0] pb-3 flex justify-between items-start">
+          <div>
+            <span class="text-label-telemetry font-label-telemetry text-secondary font-semibold block" id="zd-tag">SECTOR 01 // NORTH QUAD</span>
+            <h3 class="text-headline-sm font-headline-sm text-primary font-bold" id="zd-title">Science &amp; Engineering Hub</h3>
+          </div>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold" id="zd-status">100% NET-POS</span>
+        </div>
+
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed" id="zd-desc">
+          High-performance engineering complex featuring smart fume-hood heat recovery, 2.4 MW rooftop bifacial arrays, and dynamic AI load shedding.
+        </p>
+
+        <!-- Metric Table -->
+        <div class="space-y-3 bg-[#F8FAF9] p-4 rounded-sm border border-[#E2E8F0]">
+          <div class="flex justify-between items-center text-body-sm">
+            <span class="text-on-surface-variant">Energy Use Intensity (EUI)</span>
+            <span class="font-label-data-sm text-primary font-semibold" id="zd-eui">38.4 kBtu/sq ft</span>
+          </div>
+          <div class="flex justify-between items-center text-body-sm">
+            <span class="text-on-surface-variant">Live Clean Generation</span>
+            <span class="font-label-data-sm text-[#10B981] font-semibold" id="zd-gen">2,140 kW</span>
+          </div>
+          <div class="flex justify-between items-center text-body-sm">
+            <span class="text-on-surface-variant">Instant Building Demand</span>
+            <span class="font-label-data-sm text-primary font-semibold" id="zd-draw">1,820 kW</span>
+          </div>
+          <div class="flex justify-between items-center text-body-sm">
+            <span class="text-on-surface-variant">Net Balance</span>
+            <span class="font-label-data-sm text-secondary font-semibold" id="zd-net">+320 kW (Export)</span>
+          </div>
+          <div class="flex justify-between items-center text-body-sm">
+            <span class="text-on-surface-variant">Active IoT Sensors</span>
+            <span class="font-label-data-sm text-primary font-semibold" id="zd-sensors">482 Nodes</span>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-[#E2E8F0] space-y-2">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant uppercase block">Faculty Lead &amp; Laboratory</span>
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-secondary text-[22px]" data-icon="school">school</span>
+            <div>
+              <p class="text-body-sm font-body-sm font-medium text-primary" id="zd-lead">Prof. Elena Vance (Clean Microgrids)</p>
+              <p class="text-label-telemetry font-label-telemetry text-on-surface-variant">Dept. of Electrical &amp; Computer Engineering</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 5. LIVE CAMPUS TELEMETRY & DYNAMIC CHART HUB (FEATURE 2)                  -->
+<!-- ========================================================================= -->
+<section class="py-20 px-6 md:px-12 bg-primary text-[#FFFFFF]" id="telemetry">
+  <div class="max-w-[1440px] mx-auto">
+    <!-- Terminal Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-8 mb-8 border-b border-outline/20 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#10B981] pulse-ring"></span>
+          <span class="text-label-telemetry font-label-telemetry text-secondary-fixed uppercase tracking-wider font-semibold">
+            REAL-TIME IOT DATASTREAM • 1-SECOND PULSE
+          </span>
+        </div>
+        <h2 class="text-headline-md md:text-headline-lg font-headline-lg text-[#FFFFFF] font-bold">
+          Campus Telemetry &amp; Energy Dispatch
+        </h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <span class="text-label-telemetry font-label-telemetry text-on-primary-container block">STORAGE CELL HEALTH</span>
+          <span class="text-label-data-sm font-label-data-sm text-[#FFFFFF] font-semibold" id="chart-bess-stat">12.4 MWh / 89% SOC</span>
+        </div>
+        <div class="bg-primary-container border border-outline/30 px-3 py-2 rounded-sm flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary-fixed text-[20px]" data-icon="battery_charging_full">battery_charging_full</span>
+          <span class="text-label-data-sm font-label-data-sm font-medium text-secondary-fixed">BESS ONLINE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Telemetry Dashboard Bento -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Live Generation vs Demand Matrix & Animated Chart.js -->
+      <div class="lg:col-span-8 bg-primary-container/80 border border-outline/30 rounded-sm p-6 space-y-6">
+        <div class="flex flex-wrap justify-between items-center border-b border-outline/20 pb-4 gap-2">
+          <span class="text-label-telemetry font-label-telemetry text-[#FFFFFF] font-semibold">GRID POWER VECTOR DISPATCH</span>
+          <div class="flex items-center gap-3">
+            <span class="text-label-telemetry font-label-telemetry text-[#6EE7B7]" id="grid-freq">FREQUENCY: 60.02 Hz</span>
+            <span class="h-3 w-px bg-outline/40"></span>
+            <button onclick="toggleTelemetryStream()" id="stream-toggle-btn" class="text-label-telemetry font-label-telemetry text-secondary-fixed hover:text-[#FFFFFF] underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]" data-icon="pause">pause</span> Pause Stream
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div class="bg-primary/60 border border-outline/20 p-4 rounded-sm">
+            <span class="text-label-telemetry font-label-telemetry text-on-primary-container block mb-1">TOTAL DEMAND</span>
+            <div class="text-headline-lg font-headline-lg text-[#FFFFFF] font-bold" id="live-demand-num">4.12 <span class="text-body-md font-body-md text-on-primary-container">MW</span></div>
+            <span class="text-label-telemetry font-label-telemetry text-outline-variant">Dynamic campus draw</span>
+          </div>
+          <div class="bg-primary/60 border border-outline/20 p-4 rounded-sm">
+            <span class="text-label-telemetry font-label-telemetry text-secondary-fixed block mb-1">LIVE GENERATION</span>
+            <div class="text-headline-lg font-headline-lg text-secondary-fixed font-bold" id="live-gen-num">4.84 <span class="text-body-md font-body-md text-secondary-fixed">MW</span></div>
+            <span class="text-label-telemetry font-label-telemetry text-[#10B981]" id="live-export-delta">+0.72 MW Local Export</span>
+          </div>
+          <div class="bg-primary/60 border border-outline/20 p-4 rounded-sm col-span-2 md:col-span-1">
+            <span class="text-label-telemetry font-label-telemetry text-on-primary-container block mb-1">CARBON AVOIDED TODAY</span>
+            <div class="text-headline-lg font-headline-lg text-[#6EE7B7] font-bold" id="live-carbon-saved">18.6 <span class="text-body-md font-body-md text-on-primary-container">tCO₂</span></div>
+            <span class="text-label-telemetry font-label-telemetry text-[#10B981]">Equivalent to 920 Trees</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Chart.js Canvas -->
+        <div class="space-y-2">
+          <div class="flex justify-between text-label-telemetry font-label-telemetry text-on-primary-container">
+            <span>24-HOUR GENERATION VS DEMAND CURVE (MW)</span>
+            <span class="text-secondary-fixed">SOLAR PEAK: 13:20 • LIVE STREAMING</span>
+          </div>
+          <div class="h-64 w-full bg-primary/70 border border-outline/20 rounded-sm p-3">
+            <canvas id="telemetryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Power Flow Diagram & Zone Cards -->
+      <div class="lg:col-span-4 space-y-4">
+        <!-- Interactive Animated Energy Sankey / Node Balance -->
+        <div class="bg-primary-container/80 border border-outline/30 rounded-sm p-5 space-y-4">
+          <div class="flex justify-between items-center border-b border-outline/20 pb-2">
+            <span class="text-label-telemetry font-label-telemetry text-[#6EE7B7] font-semibold">POWER FLOW BALANCER</span>
+            <span class="text-label-telemetry font-label-telemetry text-secondary-fixed">ISLAND READY</span>
+          </div>
+          
+          <div class="space-y-3 text-body-sm font-body-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-outline-variant flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#10B981]"></span> Solar Bifacial Arrays</span>
+              <span class="font-label-data-sm text-[#10B981] font-semibold" id="flow-solar">3.42 MW</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-outline-variant flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#6EE7B7]"></span> Geothermal District Heat</span>
+              <span class="font-label-data-sm text-[#6EE7B7] font-semibold" id="flow-geo">0.92 MW</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-outline-variant flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary-fixed"></span> Kinetic Walkways &amp; Wind</span>
+              <span class="font-label-data-sm text-secondary-fixed font-semibold" id="flow-wind">0.50 MW</span>
+            </div>
+            <div class="border-t border-outline/20 pt-2 flex items-center justify-between font-semibold">
+              <span class="text-[#FFFFFF]">Total Clean Input:</span>
+              <span class="font-label-data-sm text-[#10B981]" id="flow-total-in">4.84 MW</span>
+            </div>
+            <div class="flex items-center justify-between text-on-primary-container">
+              <span>Campus Facility Demand:</span>
+              <span class="font-label-data-sm text-[#FFFFFF]" id="flow-total-out">-4.12 MW</span>
+            </div>
+            <div class="bg-primary p-2.5 rounded-sm border border-secondary/40 flex items-center justify-between">
+              <span class="text-[#6EE7B7] font-medium">Export to Municipal Grid:</span>
+              <span class="font-label-data-sm text-[#6EE7B7] font-bold" id="flow-export">+0.72 MW</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone 1 Quick Card -->
+        <div class="bg-primary-container/80 border border-outline/30 rounded-sm p-4 hover:border-secondary transition-all">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-label-telemetry font-label-telemetry text-[#6EE7B7]">ZONE 01 // NORTH QUAD</span>
+            <span class="text-label-data-sm font-label-data-sm text-[#10B981] font-semibold">100% NET-POS</span>
+          </div>
+          <h4 class="text-headline-sm font-headline-sm text-[#FFFFFF] text-base font-semibold">Science &amp; Engineering Hub</h4>
+          <p class="text-body-sm font-body-sm text-outline-variant text-xs mt-1">AI predictive building loads balancing fume hoods with dedicated solar thermal.</p>
+        </div>
+
+        <!-- Zone 2 Quick Card -->
+        <div class="bg-primary-container/80 border border-outline/30 rounded-sm p-4 hover:border-secondary transition-all">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-label-telemetry font-label-telemetry text-[#6EE7B7]">ZONE 02 // ATHLETICS</span>
+            <span class="text-label-data-sm font-label-data-sm text-[#10B981] font-semibold">92% NET-CLEAN</span>
+          </div>
+          <h4 class="text-headline-sm font-headline-sm text-[#FFFFFF] text-base font-semibold">Fieldhouse &amp; Aquatic Complex</h4>
+          <p class="text-body-sm font-body-sm text-outline-variant text-xs mt-1">Thermal geo-exchange heating 50m pool alongside 320 kW rooftop arrays.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 6. WHAT-IF CAPACITY & SOLAR YIELD SIMULATOR (FEATURE 1)                   -->
+<!-- ========================================================================= -->
+<section class="py-20 px-6 md:px-12 max-w-[1440px] mx-auto" id="simulator">
+  <div class="max-w-3xl mb-12">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="tune">tune</span>
+      <span class="text-label-telemetry font-label-telemetry text-secondary uppercase tracking-widest font-semibold">Engineering Planning Tool</span>
+    </div>
+    <h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary tracking-tight font-bold">
+      Renewable What-If &amp; Capacity Simulator
+    </h2>
+    <p class="text-body-md font-body-md text-on-surface-variant mt-3">
+      Adjust planned clean tech infrastructure sliders below to model real-time changes in campus generation yield, annual carbon abatement, and municipal utility cost savings for your stakeholders.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Interactive Sliders Form -->
+    <div class="lg:col-span-7 bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm p-8 shadow-sm space-y-6">
+      <div class="border-b border-[#E2E8F0] pb-4 flex justify-between items-center">
+        <span class="text-label-telemetry font-label-telemetry text-primary font-semibold uppercase">INFRASTRUCTURE PARAMETERS</span>
+        <button onclick="resetSimulator()" class="text-label-telemetry font-label-telemetry text-on-surface-variant hover:text-secondary underline">Reset to Baseline</button>
+      </div>
+
+      <!-- Slider 1: Solar Capacity -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-body-sm font-body-sm font-medium text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="solar_power">solar_power</span>
+            Agrivoltaic Solar Canopy Capacity
+          </label>
+          <span class="font-label-data-sm text-secondary font-bold" id="val-solar">6.2 MW</span>
+        </div>
+        <input type="range" min="2" max="15" step="0.2" value="6.2" id="slider-solar" oninput="updateSimulator()" class="w-full h-2 bg-[#F8FAF9] rounded-lg appearance-none cursor-pointer accent-[#006C49] border border-[#E2E8F0]"/>
+        <div class="flex justify-between text-label-telemetry font-label-telemetry text-on-surface-variant text-[10px]">
+          <span>2.0 MW (Minimal)</span>
+          <span>Baseline: 6.2 MW</span>
+          <span>15.0 MW (Full Canopy)</span>
+        </div>
+      </div>
+
+      <!-- Slider 2: Battery BESS Storage -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-body-sm font-body-sm font-medium text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="battery_charging_full">battery_charging_full</span>
+            Battery Storage System (BESS)
+          </label>
+          <span class="font-label-data-sm text-secondary font-bold" id="val-bess">14.0 MWh</span>
+        </div>
+        <input type="range" min="4" max="30" step="1" value="14" id="slider-bess" oninput="updateSimulator()" class="w-full h-2 bg-[#F8FAF9] rounded-lg appearance-none cursor-pointer accent-[#006C49] border border-[#E2E8F0]"/>
+        <div class="flex justify-between text-label-telemetry font-label-telemetry text-on-surface-variant text-[10px]">
+          <span>4 MWh (Buffer)</span>
+          <span>Baseline: 14 MWh</span>
+          <span>30 MWh (24h Autonomy)</span>
+        </div>
+      </div>
+
+      <!-- Slider 3: Geothermal Boreholes -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label class="text-body-sm font-body-sm font-medium text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="heat_pump">heat_pump</span>
+            Geothermal Geo-Exchange Boreholes
+          </label>
+          <span class="font-label-data-sm text-secondary font-bold" id="val-geo">180 Wells</span>
+        </div>
+        <input type="range" min="50" max="400" step="10" value="180" id="slider-geo" oninput="updateSimulator()" class="w-full h-2 bg-[#F8FAF9] rounded-lg appearance-none cursor-pointer accent-[#006C49] border border-[#E2E8F0]"/>
+        <div class="flex justify-between text-label-telemetry font-label-telemetry text-on-surface-variant text-[10px]">
+          <span>50 Wells</span>
+          <span>Baseline: 180 Wells</span>
+          <span>400 Wells</span>
+        </div>
+      </div>
+
+      <!-- Weather Scenario Toggle -->
+      <div class="space-y-2 pt-2 border-t border-[#E2E8F0]">
+        <label class="text-body-sm font-body-sm font-medium text-primary block">Meteorological Condition Scenario</label>
+        <div class="grid grid-cols-3 gap-3">
+          <button onclick="setWeather(1.0, this)" class="weather-btn px-3 py-2 border-2 border-secondary bg-secondary/10 rounded-sm text-primary font-body-sm text-sm font-medium flex items-center justify-center gap-1.5 transition-all">
+            <span>☀️ Clear 100%</span>
+          </button>
+          <button onclick="setWeather(0.72, this)" class="weather-btn px-3 py-2 border border-[#E2E8F0] bg-[#FFFFFF] rounded-sm text-on-surface-variant font-body-sm text-sm font-medium flex items-center justify-center gap-1.5 transition-all hover:border-secondary">
+            <span>⛅ Mild 72%</span>
+          </button>
+          <button onclick="setWeather(0.38, this)" class="weather-btn px-3 py-2 border border-[#E2E8F0] bg-[#FFFFFF] rounded-sm text-on-surface-variant font-body-sm text-sm font-medium flex items-center justify-center gap-1.5 transition-all hover:border-secondary">
+            <span>🌧️ Overcast 38%</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Calculated ROI & Impact Showcase (Superior-Facing) -->
+    <div class="lg:col-span-5 bg-primary-container text-[#FFFFFF] rounded-sm p-8 shadow-sm space-y-6 border border-outline/30">
+      <div class="border-b border-outline/20 pb-4 flex justify-between items-center">
+        <span class="text-label-telemetry font-label-telemetry text-secondary-fixed font-semibold">PROJECTED CAMPUS IMPACT</span>
+        <span class="text-label-telemetry font-label-telemetry bg-primary px-2 py-0.5 border border-outline/30 text-[#6EE7B7]">LIVE MODEL</span>
+      </div>
+
+      <!-- Big Metric 1: Annual Clean Generation -->
+      <div>
+        <span class="text-label-telemetry font-label-telemetry text-on-primary-container uppercase block mb-1">Projected Annual Yield</span>
+        <div class="text-headline-lg font-headline-lg font-bold text-[#FFFFFF] tracking-tight" id="out-yield">9.45 <span class="text-headline-sm font-normal text-secondary-fixed">GWh / Year</span></div>
+        <p class="text-body-sm font-body-sm text-outline-variant mt-1">Equivalent to powering 1,180 residential homes</p>
+      </div>
+
+      <!-- Secondary Metric Grid -->
+      <div class="grid grid-cols-2 gap-4 border-t border-outline/20 pt-4">
+        <div>
+          <span class="text-label-telemetry font-label-telemetry text-on-primary-container uppercase block mb-1">Carbon Abatement</span>
+          <div class="text-headline-md font-headline-md font-bold text-[#6EE7B7]" id="out-carbon">6,820 <span class="text-xs font-normal">tCO₂e/yr</span></div>
+          <span class="text-label-telemetry font-label-telemetry text-outline-variant">Direct Scope 1 &amp; 2</span>
+        </div>
+        <div>
+          <span class="text-label-telemetry font-label-telemetry text-on-primary-container uppercase block mb-1">Annual Utility Savings</span>
+          <div class="text-headline-md font-headline-md font-bold text-secondary-fixed" id="out-savings">$1,417,500</div>
+          <span class="text-label-telemetry font-label-telemetry text-outline-variant">LCOE $0.042/kWh</span>
+        </div>
+        <div>
+          <span class="text-label-telemetry font-label-telemetry text-on-primary-container uppercase block mb-1">Clean Autonomy</span>
+          <div class="text-headline-md font-headline-md font-bold text-[#FFFFFF]" id="out-autonomy">94.8%</div>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981]">Net-Zero Reached</span>
+        </div>
+        <div>
+          <span class="text-label-telemetry font-label-telemetry text-on-primary-container uppercase block mb-1">Estimated Payback</span>
+          <div class="text-headline-md font-headline-md font-bold text-[#FFFFFF]" id="out-payback">5.8 <span class="text-xs font-normal">Years</span></div>
+          <span class="text-label-telemetry font-label-telemetry text-outline-variant">IRR: 16.4%</span>
+        </div>
+      </div>
+
+      <!-- Action: Export This Scenario to Brief -->
+      <div class="border-t border-outline/20 pt-4">
+        <button onclick="openExecutiveModal()" class="w-full py-3 bg-secondary hover:bg-secondary-container text-on-secondary hover:text-primary font-body-md font-medium rounded-sm border border-secondary transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+          <span>Apply Scenario &amp; Generate Executive Brief</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 7. LIVING LAB & STUDENT RESEARCH SHOWCASE                                 -->
+<!-- ========================================================================= -->
+<section class="py-16 px-6 md:px-12 max-w-[1440px] mx-auto border-t border-[#E2E8F0]" id="research">
+  <div class="max-w-2xl mb-12">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="science">science</span>
+      <span class="text-label-telemetry font-label-telemetry text-secondary uppercase tracking-widest font-semibold">
+        Academic Inquiry as Infrastructure
+      </span>
+    </div>
+    <h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary tracking-tight font-bold">
+      The Living Lab: Student &amp; Faculty Research
+    </h2>
+    <p class="text-body-md font-body-md text-on-surface-variant mt-3">
+      Undergraduates and principal investigators use our physical campus as an open-source testbed for scalable climate technology.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Project 1 -->
+    <article class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm overflow-hidden flex flex-col justify-between hover:border-secondary transition-all shadow-xs">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center text-label-telemetry font-label-telemetry text-on-surface-variant">
+          <span>DEPT. ELECTRICAL ENG</span>
+          <span class="text-secondary font-semibold">ACTIVE LAB</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Autonomous Micro-Grid AI Dispatch</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Predictive machine learning algorithms training on weather satellites to throttle chiller loops prior to CAISO peak-pricing grid hours.
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-[#F8FAF9] border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">PEAK SAVINGS: 34%</span>
+        <a class="text-secondary hover:underline font-semibold" href="#telemetry">View Algorithmic Telemetry →</a>
+      </div>
+    </article>
+
+    <!-- Project 2 -->
+    <article class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm overflow-hidden flex flex-col justify-between hover:border-secondary transition-all shadow-xs">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center text-label-telemetry font-label-telemetry text-on-surface-variant">
+          <span>BIO-DESIGN INSTITUTE</span>
+          <span class="text-secondary font-semibold">PATENT PENDING</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Algae Bioreactor Carbon Capture Walls</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Vertical micro-algae culture facades installed on the chemistry building absorbing 3.2 tons of CO₂ annually while reducing solar heat gain.
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-[#F8FAF9] border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">BIOMASS YIELD: 800 KG</span>
+        <a class="text-secondary hover:underline font-semibold" href="#campus-map">Sector North Quad →</a>
+      </div>
+    </article>
+
+    <!-- Project 3 -->
+    <article class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm overflow-hidden flex flex-col justify-between hover:border-secondary transition-all shadow-xs">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center text-label-telemetry font-label-telemetry text-on-surface-variant">
+          <span>CIVIL &amp; ENV. ENGINEERING</span>
+          <span class="text-secondary font-semibold">CAMPUS PILOT</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Blackwater Wetland Phyto-Remediation</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Engineered subsurface gravel wetlands using hyper-accumulating wetland reeds to purify 100% of residential dormitory greywater for cooling towers.
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-[#F8FAF9] border-t border-[#E2E8F0] flex justify-between items-center text-label-telemetry font-label-telemetry">
+        <span class="text-on-surface-variant">PURITY: EPA CLASS A</span>
+        <a class="text-secondary hover:underline font-semibold" href="#roadmap">Full Whitepaper →</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 8. NET-ZERO 2030 ROADMAP TRACKER                                          -->
+<!-- ========================================================================= -->
+<section class="py-16 px-6 md:px-12 bg-[#FFFFFF] border-t border-[#E2E8F0]" id="roadmap">
+  <div class="max-w-[1440px] mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-secondary text-[20px]" data-icon="timeline">timeline</span>
+          <span class="text-label-telemetry font-label-telemetry text-secondary uppercase tracking-widest font-semibold">Target Glidepath</span>
+        </div>
+        <h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-primary tracking-tight font-bold">
+          Decarbonization Roadmap &amp; Milestones
+        </h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-label-telemetry font-label-telemetry text-on-surface-variant">AUDIT COMPLIANCE:</span>
+        <span class="text-label-telemetry font-label-telemetry text-primary font-semibold border border-[#E2E8F0] px-2 py-0.5 bg-[#F8FAF9]">GHG PROTOCOL SCOPE 1, 2 &amp; 3</span>
+      </div>
+    </div>
+
+    <!-- Timeline Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- Phase 1 -->
+      <div class="p-6 bg-[#F8FAF9] border border-[#E2E8F0] rounded-sm space-y-4 relative">
+        <div class="flex justify-between items-center">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant font-semibold">PHASE 01 // 2022</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span> VERIFIED
+          </span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Passive Efficiency &amp; LED</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          100% building envelope insulation retrofit, triple-pane smart glass, and full academic quadrant LED automation.
+        </p>
+        <div class="pt-2 border-t border-[#E2E8F0] text-label-telemetry font-label-telemetry text-on-surface-variant">
+          BASELINE REDUCTION: -28%
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="p-6 bg-[#F8FAF9] border border-[#E2E8F0] rounded-sm space-y-4 relative">
+        <div class="flex justify-between items-center">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant font-semibold">PHASE 02 // 2024</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span> VERIFIED
+          </span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Microgrid Islanding &amp; BESS</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Installation of 14 MWh battery storage systems and intelligent Substation Alpha automated islanding switchgear.
+        </p>
+        <div class="pt-2 border-t border-[#E2E8F0] text-label-telemetry font-label-telemetry text-on-surface-variant">
+          RESILIENCE: 72H AUTONOMOUS
+        </div>
+      </div>
+
+      <!-- Phase 3 (Active) -->
+      <div class="p-6 bg-[#FFFFFF] border-2 border-secondary rounded-sm space-y-4 relative shadow-sm">
+        <div class="flex justify-between items-center">
+          <span class="text-label-telemetry font-label-telemetry text-secondary font-bold">PHASE 03 // 2025-2026</span>
+          <span class="text-label-telemetry font-label-telemetry text-[#10B981] bg-[#F8FAF9] px-2 py-0.5 border border-[#E2E8F0] font-semibold">
+            84% ACTIVE
+          </span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Hydrologic &amp; Waste Loops</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Closing water cycles with blackwater bioremediation wetlands, greywater laundry retrofits, and campuswide zero-waste dining.
+        </p>
+        <div class="w-full bg-[#F8FAF9] h-2 rounded-full overflow-hidden border border-[#E2E8F0]">
+          <div class="bg-secondary h-full rounded-full" style="width: 84%;"></div>
+        </div>
+        <div class="pt-2 border-t border-[#E2E8F0] text-label-telemetry font-label-telemetry text-secondary font-semibold">
+          ON SCHEDULE FOR Q4 2026
+        </div>
+      </div>
+
+      <!-- Phase 4 (Target) -->
+      <div class="p-6 bg-[#F8FAF9] border border-dashed border-[#C1C8C3] rounded-sm space-y-4 relative opacity-85">
+        <div class="flex justify-between items-center">
+          <span class="text-label-telemetry font-label-telemetry text-on-surface-variant font-semibold">PHASE 04 // 2028-2030</span>
+          <span class="text-label-telemetry font-label-telemetry text-outline">HORIZON</span>
+        </div>
+        <h3 class="text-headline-sm font-headline-sm text-primary font-semibold">Carbon Negative Export</h3>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          Transitioning the university from net-zero to net-exporter of clean energy to neighboring civic districts alongside permanent biochar sequestration.
+        </p>
+        <div class="pt-2 border-t border-[#E2E8F0] text-label-telemetry font-label-telemetry text-on-surface-variant">
+          TARGET: -15,000 TONS/YR
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 9. EXECUTIVE ESG BRIEF MODAL & ONE-CLICK PDF PRINT (FEATURE 4)           -->
+<!-- ========================================================================= -->
+<div id="executive-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+  <div id="executive-modal-content" class="bg-[#FFFFFF] border border-[#E2E8F0] rounded-sm max-w-4xl w-full p-8 md:p-10 shadow-2xl relative my-8">
+    
+    <!-- Top Action Bar (No-Print) -->
+    <div class="flex justify-between items-center pb-6 border-b border-[#E2E8F0] mb-8 no-print">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary text-[24px]" data-icon="verified">verified</span>
+        <span class="text-label-telemetry font-label-telemetry text-secondary uppercase font-semibold">Executive Presentation Sheet</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="window.print()" class="flex items-center gap-2 bg-secondary hover:bg-secondary-container text-on-secondary hover:text-primary px-4 py-2 rounded-sm font-body-md text-sm font-semibold transition-all">
+          <span class="material-symbols-outlined text-[18px]" data-icon="print">print</span>
+          <span>Print / Save as PDF</span>
+        </button>
+        <button onclick="closeExecutiveModal()" class="text-on-surface-variant hover:text-primary p-2">
+          <span class="material-symbols-outlined text-[24px]" data-icon="close">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Printable Formal Executive Brief Header -->
+    <div class="space-y-6">
+      <div class="flex justify-between items-start border-b-2 border-primary pb-6">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <img alt="VerdeCampus Seal" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Xzm0_1UE7EbMQzJiAgUqxyNF8_Hh0Z1sxT8X7UMr9LUv7qsRQveoY6u4MsDtkA8m6lyCHVmWt717AiltQhe4oJOnRm7U2hsgrbGYHKUdZx3mTer_2umF6NEGBjp2mcj8G41eJwMkvNh-u2ZYDoCRLsVfhncabY0LegNoKiLB8MEeXKQG3ZeUzp6_dqliT5JPQoC5WuTv1_2nt4ocyNi01i9S1h8p4FaT-IjkJEJ9PzPQXvAE8JWBAlQ-0"/>
+            <div>
+              <h2 class="text-headline-md font-headline-md font-bold text-primary">VERDECAMPUS LIVING LABORATORY</h2>
+              <p class="text-label-telemetry font-label-telemetry text-on-surface-variant text-xs">EXECUTIVE SUSTAINABILITY AUDIT &amp; CAPEX ROI BRIEF</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-label-telemetry font-label-telemetry text-primary font-semibold" id="eb-date">DATE: OCTOBER 2026</div>
+          <div class="text-label-telemetry font-label-telemetry text-[#10B981] font-semibold">STATUS: ISO 14064 VERIFIED</div>
+          <div class="text-label-telemetry font-label-telemetry text-on-surface-variant">DOC REF: VC-EXEC-2026-Q4</div>
+        </div>
+      </div>
+
+      <!-- Executive Overview Summary Paragraph -->
+      <div class="bg-[#F8FAF9] p-5 border border-[#E2E8F0] rounded-sm space-y-2">
+        <h4 class="text-headline-sm font-headline-sm text-sm font-bold text-primary uppercase">Institutional Climate &amp; Fiscal Summary</h4>
+        <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+          VerdeCampus functions as an accredited 100% decentralized living laboratory. Through a synchronized deployment of 6.2 MW bifacial agrivoltaics, 180 subterranean geothermal geo-exchange boreholes, and a 14 MWh Battery Energy Storage System (BESS), the university has achieved net-negative peak carbon operations while generating substantial recurring municipal utility savings.
+        </p>
+      </div>
+
+      <!-- Key Audited Metrics Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border border-[#E2E8F0] rounded-sm">
+          <thead>
+            <tr class="bg-primary text-[#FFFFFF] text-label-telemetry font-label-telemetry text-xs">
+              <th class="p-3">KEY PERFORMANCE INDICATOR</th>
+              <th class="p-3">CURRENT METRIC</th>
+              <th class="p-3">PEER BENCHMARK</th>
+              <th class="p-3">VARIANCE / DELTA</th>
+            </tr>
+          </thead>
+          <tbody class="text-body-sm font-body-sm divide-y divide-[#E2E8F0]">
+            <tr>
+              <td class="p-3 font-medium text-primary">Clean Electricity Share</td>
+              <td class="p-3 font-semibold text-secondary" id="eb-clean-share">94.8%</td>
+              <td class="p-3 text-on-surface-variant">32.0% (Higher Ed Avg)</td>
+              <td class="p-3 font-semibold text-[#10B981]">+62.8% Delta</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-primary">Annual Avoided GHG (Scope 1 &amp; 2)</td>
+              <td class="p-3 font-semibold text-primary" id="eb-carbon">6,820 Metric Tons CO₂e</td>
+              <td class="p-3 text-on-surface-variant">Baseline 18,500 Tons</td>
+              <td class="p-3 font-semibold text-[#10B981]">-63.1% Abated</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-primary">Levelized Cost of Energy (LCOE)</td>
+              <td class="p-3 font-semibold text-primary">$0.042 / kWh</td>
+              <td class="p-3 text-on-surface-variant">$0.168 / kWh (Grid Tariff)</td>
+              <td class="p-3 font-semibold text-[#10B981]">75% Cheaper</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-primary">Annual Operational Utility Savings</td>
+              <td class="p-3 font-semibold text-secondary" id="eb-savings">$1,417,500 USD</td>
+              <td class="p-3 text-on-surface-variant">—</td>
+              <td class="p-3 font-semibold text-[#10B981]">Direct Budget Relief</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-primary">Microgrid Islanding Autonomy</td>
+              <td class="p-3 font-semibold text-primary">72 Continuous Hours</td>
+              <td class="p-3 text-on-surface-variant">4 Hours (Diesel Backup)</td>
+              <td class="p-3 font-semibold text-[#10B981]">+68 Hours Resilience</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-primary">AASHE STARS Rating</td>
+              <td class="p-3 font-semibold text-secondary">Platinum (92.4 Points)</td>
+              <td class="p-3 text-on-surface-variant">Silver / Gold</td>
+              <td class="p-3 font-semibold text-[#10B981]">Top 0.1% Internationally</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Signatures & Verification Stamp -->
+      <div class="grid grid-cols-2 gap-8 pt-8 border-t border-[#E2E8F0]">
+        <div>
+          <p class="text-label-telemetry font-label-telemetry text-on-surface-variant mb-4 uppercase">Approved by Office of Facilities &amp; Campus Sustainability:</p>
+          <div class="border-b border-primary w-48 mb-1"></div>
+          <p class="text-body-sm font-semibold text-primary">Director of Campus Infrastructure</p>
+          <p class="text-label-telemetry font-label-telemetry text-on-surface-variant text-xs">VerdeCampus Institute of Technology</p>
+        </div>
+        <div class="text-right">
+          <p class="text-label-telemetry font-label-telemetry text-on-surface-variant mb-4 uppercase">Auditing Protocol Verification:</p>
+          <div class="inline-block p-2 bg-[#F8FAF9] border border-[#E2E8F0] rounded text-left">
+            <p class="text-label-telemetry font-bold text-primary">LEED ZERO ENERGY CERTIFIED</p>
+            <p class="text-label-telemetry text-on-surface-variant text-[10px]">AASHE STARS PLATINUM #STARS-88219</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- 10. EDITORIAL NEWSLETTER CTA                                              -->
+<!-- ========================================================================= -->
+<section class="py-16 px-6 md:px-12 max-w-[1440px] mx-auto">
+  <div class="bg-primary-container text-[#FFFFFF] rounded-sm p-8 md:p-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8 border border-outline/30 shadow-md">
+    <div class="max-w-xl space-y-2">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary-fixed text-[20px]" data-icon="mail">mail</span>
+        <span class="text-label-telemetry font-label-telemetry text-secondary-fixed uppercase font-semibold">The Verde Dispatch</span>
+      </div>
+      <h3 class="text-headline-md font-headline-md text-[#FFFFFF] font-bold">
+        Weekly Campus Climate Data &amp; Engineering Whitepapers
+      </h3>
+      <p class="text-body-sm font-body-sm text-outline-variant">
+        Direct sensor telemetry feeds, algorithm releases from student researchers, and public invitations to quarterly microgrid demonstrations.
+      </p>
+    </div>
+    <form class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto" onsubmit="event.preventDefault(); alert('Thank you for subscribing to The Verde Dispatch!');">
+      <input class="bg-[#FFFFFF] text-primary border border-[#E2E8F0] px-4 py-3 rounded-sm font-body-md text-body-md focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary min-w-[280px]" placeholder="academic.email@university.edu" required="" type="email"/>
+      <button class="bg-secondary hover:bg-secondary-container text-on-secondary hover:text-primary transition-colors font-body-md text-body-md font-semibold px-6 py-3 rounded-sm border border-secondary" type="submit">
+        Subscribe
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ========================================================================= -->
+<!-- 11. INSTITUTIONAL FOOTER                                                  -->
+<!-- ========================================================================= -->
+<footer class="bg-primary-container text-on-primary border-t border-outline/20">
+  <div class="w-full px-6 md:px-12 py-12 max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="space-y-3 max-w-xl text-center md:text-left">
+      <div class="flex items-center justify-center md:justify-start gap-3">
+        <img alt="VerdeCampus Institute Seal" class="h-7 w-auto object-contain brightness-0 invert opacity-90" src="https://lh3.googleusercontent.com/aida/AEtjO1Xzm0_1UE7EbMQzJiAgUqxyNF8_Hh0Z1sxT8X7UMr9LUv7qsRQveoY6u4MsDtkA8m6lyCHVmWt717AiltQhe4oJOnRm7U2hsgrbGYHKUdZx3mTer_2umF6NEGBjp2mcj8G41eJwMkvNh-u2ZYDoCRLsVfhncabY0LegNoKiLB8MEeXKQG3ZeUzp6_dqliT5JPQoC5WuTv1_2nt4ocyNi01i9S1h8p4FaT-IjkJEJ9PzPQXvAE8JWBAlQ-0"/>
+        <span class="text-headline-sm font-headline-sm font-semibold text-secondary-container">VerdeCampus</span>
+      </div>
+      <p class="text-body-sm font-body-sm text-primary-fixed-dim leading-relaxed">
+        © 2026 VerdeCampus Living Laboratory. Real-time net-zero verification powered by Planetary Data Architecture. All telemetry certified ISO 14064.
+      </p>
+    </div>
+    <div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-body-sm font-body-sm">
+      <a class="text-primary-fixed-dim hover:text-secondary-fixed transition-colors" href="#telemetry">Telemetry Feed</a>
+      <a class="text-primary-fixed-dim hover:text-secondary-fixed transition-colors" href="#campus-map">Campus GIS</a>
+      <a class="text-primary-fixed-dim hover:text-secondary-fixed transition-colors" href="#simulator">Simulator</a>
+      <a class="text-primary-fixed-dim hover:text-secondary-fixed transition-colors" href="#research">Research</a>
+      <a class="text-secondary-container underline underline-offset-4 hover:text-secondary-fixed transition-colors" href="javascript:void(0)" onclick="openExecutiveModal()">Executive Report (PDF)</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT: INTERACTIVE CONTROLLERS & REAL-TIME SIMULATION               -->
+<!-- ========================================================================= -->
+<script>
+  // 1. GIS CAMPUS ZONE DATA & INTERACTION
+  const zoneData = {
+    zone1: {
+      tag: "SECTOR 01 // NORTH QUAD",
+      title: "Science & Engineering Hub",
+      status: "100% NET-POS",
+      desc: "High-performance engineering complex featuring smart fume-hood heat recovery, 2.4 MW rooftop bifacial arrays, and dynamic AI load shedding.",
+      eui: "38.4 kBtu/sq ft",
+      gen: "2,140 kW",
+      draw: "1,820 kW",
+      net: "+320 kW (Export)",
+      sensors: "482 Nodes",
+      lead: "Prof. Elena Vance (Clean Microgrids)"
+    },
+    zone2: {
+      tag: "SECTOR 02 // ATHLETICS",
+      title: "Fieldhouse & Aquatic Complex",
+      status: "92% NET-CLEAN",
+      desc: "Deep geo-exchange ground thermal heat sinks maintaining 50m Olympic pool at zero boiler reliance, augmented by 640 kW solar parking canopies.",
+      eui: "52.1 kBtu/sq ft",
+      gen: "890 kW",
+      draw: "960 kW",
+      net: "-70 kW (Covered by BESS)",
+      sensors: "310 Nodes",
+      lead: "Dr. Marcus Thorne (Hydrology & Thermal)"
+    },
+    zone3: {
+      tag: "SECTOR 03 // RESIDENCES",
+      title: "Eco-Living Village & Quads",
+      status: "96% NEUTRAL",
+      desc: "2,400-student modular timber living quads with greywater laundry recycling, rooftop micro-wind, and room-by-room smart occupancy thermostats.",
+      eui: "24.8 kBtu/sq ft",
+      gen: "650 kW",
+      draw: "680 kW",
+      net: "-30 kW (Buffer Neutral)",
+      sensors: "620 Nodes",
+      lead: "Campus Undergraduate Sustainability Council"
+    },
+    zone4: {
+      tag: "SECTOR 04 // SUBSTATION ALPHA",
+      title: "Central Substation & BESS Hub",
+      status: "ISLAND READY",
+      desc: "Primary interconnect station housing 14 MWh grid-forming battery storage, bidirectional inverters, and high-voltage municipal grid telemetry.",
+      eui: "N/A (Generation Hub)",
+      gen: "4,840 kW System Total",
+      draw: "4,120 kW Total Draw",
+      net: "+720 kW Exporting",
+      sensors: "1,140 Nodes",
+      lead: "Office of Campus Energy Engineering"
+    }
+  };
+
+  function selectZone(zoneKey) {
+    const data = zoneData[zoneKey];
+    if (!data) return;
+
+    document.getElementById('zd-tag').textContent = data.tag;
+    document.getElementById('zd-title').textContent = data.title;
+    document.getElementById('zd-status').textContent = data.status;
+    document.getElementById('zd-desc').textContent = data.desc;
+    document.getElementById('zd-eui').textContent = data.eui;
+    document.getElementById('zd-gen').textContent = data.gen;
+    document.getElementById('zd-draw').textContent = data.draw;
+    document.getElementById('zd-net').textContent = data.net;
+    document.getElementById('zd-sensors').textContent = data.sensors;
+    document.getElementById('zd-lead').textContent = data.lead;
+
+    // Highlight Buttons
+    document.querySelectorAll('.zone-pill').forEach(btn => {
+      btn.className = "zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-[#E2E8F0] bg-[#F8FAF9] text-primary hover:border-secondary transition-all";
+    });
+    const activeBtn = document.getElementById(`btn-${zoneKey}`);
+    if (activeBtn) {
+      activeBtn.className = "zone-pill text-label-telemetry font-label-telemetry px-2.5 py-1 rounded-sm border border-secondary bg-secondary text-[#FFFFFF] transition-all font-semibold";
+    }
+
+    // Highlight SVG Map elements
+    ['zone1', 'zone2', 'zone3', 'zone4'].forEach(z => {
+      const g = document.getElementById(`map-${z}`);
+      if (g) {
+        if (z === zoneKey) {
+          g.setAttribute('opacity', '1.0');
+          g.querySelector('rect').setAttribute('stroke', '#10B981');
+          g.querySelector('rect').setAttribute('stroke-width', '3');
+        } else {
+          g.setAttribute('opacity', '0.7');
+          g.querySelector('rect').setAttribute('stroke', '#E2E8F0');
+          g.querySelector('rect').setAttribute('stroke-width', '1.5');
+        }
+      }
+    });
+  }
+
+  // 2. CHART.JS DYNAMIC TELEMETRY INITIALIZATION & LIVE STREAM
+  let telemetryChart = null;
+  let isStreamActive = true;
+  let streamTimer = null;
+
+  function initChart() {
+    const ctx = document.getElementById('telemetryChart').getContext('2d');
+    const hours = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '13:20 (Now)', '14:00', '16:00', '18:00', '20:00', '22:00'];
+    const solarGeneration = [0.0, 0.0, 0.0, 0.4, 1.8, 3.6, 4.7, 4.84, 4.5, 3.1, 1.1, 0.0, 0.0];
+    const campusDemand = [2.8, 2.7, 2.6, 2.9, 3.4, 3.9, 4.0, 4.12, 4.15, 3.8, 3.6, 3.2, 3.0];
+    const batterySOC = [72, 70, 68, 65, 68, 75, 84, 89, 92, 94, 91, 85, 78];
+
+    telemetryChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: hours,
+        datasets: [
+          {
+            label: 'Clean Generation (MW)',
+            data: solarGeneration,
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#10B981',
+            pointRadius: [3, 3, 3, 3, 3, 3, 3, 6, 3, 3, 3, 3, 3]
+          },
+          {
+            label: 'Campus Demand (MW)',
+            data: campusDemand,
+            borderColor: '#94A3B8',
+            backgroundColor: 'transparent',
+            borderDash: [5, 5],
+            tension: 0.35,
+            borderWidth: 2,
+            pointBackgroundColor: '#94A3B8',
+            pointRadius: 3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#CBD5E1',
+              font: { family: 'JetBrains Mono', size: 11 }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#0A291E',
+            titleColor: '#6EE7B7',
+            bodyColor: '#FFFFFF',
+            borderColor: '#10B981',
+            borderWidth: 1,
+            titleFont: { family: 'Space Grotesk' },
+            bodyFont: { family: 'JetBrains Mono' }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.06)' },
+            ticks: { color: '#94A3B8', font: { family: 'JetBrains Mono', size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.06)' },
+            ticks: {
+              color: '#94A3B8',
+              font: { family: 'JetBrains Mono', size: 10 },
+              callback: function(v) { return v + ' MW'; }
+            },
+            min: 0,
+            max: 6
+          }
+        }
+      }
+    });
+
+    // Start Real-Time Simulation Heartbeat
+    startStreamHeartbeat();
+  }
+
+  function startStreamHeartbeat() {
+    if (streamTimer) clearInterval(streamTimer);
+    streamTimer = setInterval(() => {
+      if (!isStreamActive) return;
+
+      // Small realistic fluctuations
+      const delta = (Math.random() - 0.48) * 0.08;
+      let currGen = parseFloat(document.getElementById('live-gen-num').textContent) + delta;
+      currGen = Math.max(4.65, Math.min(5.1, currGen));
+
+      const demandDelta = (Math.random() - 0.5) * 0.06;
+      let currDemand = parseFloat(document.getElementById('live-demand-num').textContent) + demandDelta;
+      currDemand = Math.max(3.95, Math.min(4.35, currDemand));
+
+      const exportMW = (currGen - currDemand).toFixed(2);
+
+      // Update UI numbers
+      document.getElementById('live-gen-num').innerHTML = `${currGen.toFixed(2)} <span class="text-body-md font-body-md text-secondary-fixed">MW</span>`;
+      document.getElementById('live-demand-num').innerHTML = `${currDemand.toFixed(2)} <span class="text-body-md font-body-md text-on-primary-container">MW</span>`;
+      document.getElementById('live-export-delta').textContent = `+${exportMW} MW Local Export`;
+      document.getElementById('hero-export-delta').textContent = `+${Math.round(exportMW * 1000)} kW Exporting`;
+      document.getElementById('flow-export').textContent = `+${exportMW} MW`;
+      document.getElementById('flow-total-in').textContent = `${currGen.toFixed(2)} MW`;
+      document.getElementById('flow-total-out').textContent = `-${currDemand.toFixed(2)} MW`;
+
+      // Update frequency jitter
+      const freq = (60.00 + (Math.random() - 0.5) * 0.04).toFixed(2);
+      document.getElementById('grid-freq').textContent = `FREQUENCY: ${freq} Hz`;
+
+      // Update chart live point
+      if (telemetryChart && telemetryChart.data.datasets[0].data[7] !== undefined) {
+        telemetryChart.data.datasets[0].data[7] = parseFloat(currGen.toFixed(2));
+        telemetryChart.data.datasets[1].data[7] = parseFloat(currDemand.toFixed(2));
+        telemetryChart.update('none');
+      }
+    }, 2400);
+  }
+
+  function toggleTelemetryStream() {
+    isStreamActive = !isStreamActive;
+    const btn = document.getElementById('stream-toggle-btn');
+    if (isStreamActive) {
+      btn.innerHTML = `<span class="material-symbols-outlined text-[14px]" data-icon="pause">pause</span> Pause Stream`;
+      btn.classList.add('text-secondary-fixed');
+    } else {
+      btn.innerHTML = `<span class="material-symbols-outlined text-[14px]" data-icon="play_arrow">play_arrow</span> Resume Stream`;
+      btn.classList.remove('text-secondary-fixed');
+    }
+  }
+
+  // 3. WHAT-IF CAPACITY SIMULATOR ENGINE
+  let weatherMultiplier = 1.0;
+
+  function setWeather(multiplier, btnElement) {
+    weatherMultiplier = multiplier;
+    document.querySelectorAll('.weather-btn').forEach(b => {
+      b.className = "weather-btn px-3 py-2 border border-[#E2E8F0] bg-[#FFFFFF] rounded-sm text-on-surface-variant font-body-sm text-sm font-medium flex items-center justify-center gap-1.5 transition-all hover:border-secondary";
+    });
+    btnElement.className = "weather-btn px-3 py-2 border-2 border-secondary bg-secondary/10 rounded-sm text-primary font-body-sm text-sm font-medium flex items-center justify-center gap-1.5 transition-all";
+    updateSimulator();
+  }
+
+  function updateSimulator() {
+    const solarMW = parseFloat(document.getElementById('slider-solar').value);
+    const bessMWh = parseFloat(document.getElementById('slider-bess').value);
+    const geoWells = parseFloat(document.getElementById('slider-geo').value);
+
+    // Update Label Readouts
+    document.getElementById('val-solar').textContent = `${solarMW.toFixed(1)} MW`;
+    document.getElementById('val-bess').textContent = `${bessMWh.toFixed(0)} MWh`;
+    document.getElementById('val-geo').textContent = `${geoWells.toFixed(0)} Wells`;
+
+    // Mathematical modeling
+    // Baseline solar yields ~1.45 GWh per MW per year under 100% weather
+    const annualSolarGWh = solarMW * 1.45 * weatherMultiplier;
+    // Geothermal offset equivalent to ~0.008 GWh per borehole
+    const annualGeoGWh = geoWells * 0.0082;
+    const totalYieldGWh = (annualSolarGWh + annualGeoGWh + 0.45).toFixed(2);
+
+    // Carbon abatement: ~720 metric tons CO2 per GWh in standard US mixed grid
+    const carbonAbatedTons = Math.round(totalYieldGWh * 720);
+
+    // Cost savings: $0.150/kWh avoided utility cost
+    const costSavingsUSD = Math.round(totalYieldGWh * 1000000 * 0.150);
+
+    // Autonomy calculation
+    const campusAnnualDemandGWh = 9.8;
+    let autonomyPct = Math.min(100, Math.round((totalYieldGWh / campusAnnualDemandGWh) * 98));
+
+    // Payback period
+    const capex = (solarMW * 1100000) + (bessMWh * 400000) + (geoWells * 12000);
+    const paybackYears = (capex / Math.max(1, costSavingsUSD)).toFixed(1);
+
+    // Render outputs
+    document.getElementById('out-yield').innerHTML = `${totalYieldGWh} <span class="text-headline-sm font-normal text-secondary-fixed">GWh / Year</span>`;
+    document.getElementById('out-carbon').innerHTML = `${carbonAbatedTons.toLocaleString()} <span class="text-xs font-normal">tCO₂e/yr</span>`;
+    document.getElementById('out-savings').textContent = `$${costSavingsUSD.toLocaleString()}`;
+    document.getElementById('out-autonomy').textContent = `${autonomyPct}%`;
+    document.getElementById('out-payback').innerHTML = `${paybackYears} <span class="text-xs font-normal">Years</span>`;
+
+    // Sync with executive brief values
+    document.getElementById('eb-clean-share').textContent = `${autonomyPct}%`;
+    document.getElementById('eb-carbon').textContent = `${carbonAbatedTons.toLocaleString()} Metric Tons CO₂e`;
+    document.getElementById('eb-savings').textContent = `$${costSavingsUSD.toLocaleString()} USD`;
+  }
+
+  function resetSimulator() {
+    document.getElementById('slider-solar').value = 6.2;
+    document.getElementById('slider-bess').value = 14;
+    document.getElementById('slider-geo').value = 180;
+    weatherMultiplier = 1.0;
+    document.querySelectorAll('.weather-btn')[0].click();
+    updateSimulator();
+  }
+
+  // 4. EXECUTIVE MODAL CONTROLLERS
+  function openExecutiveModal() {
+    const modal = document.getElementById('executive-modal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const d = new Date();
+    document.getElementById('eb-date').textContent = `DATE: ${d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }).toUpperCase()}`;
+  }
+
+  function closeExecutiveModal() {
+    const modal = document.getElementById('executive-modal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Close modal when clicking outside
+  document.getElementById('executive-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeExecutiveModal();
+  });
+
+  // Run on DOM load
+  window.addEventListener('DOMContentLoaded', () => {
+    initChart();
+    updateSimulator();
+    selectZone('zone1');
+  });
+</script>
+
+</body>
+</html>
